@@ -1,0 +1,335 @@
+/* styles.css - Fixed Add Resources Button Version */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 30px;
+  padding-left: 10px;
+}
+
+/* Main Criteria Containers */
+.criteria-container {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+  position: relative;
+  margin-left: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.criteria-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+/* Dropdown Buttons */
+.dropdown-btn {
+  padding: 12px 20px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  font-size: 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 0;
+  padding-right: 35px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-sizing: border-box;
+}
+
+.dropdown-btn:hover {
+  background-color: #0b7dda;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* Subcriteria Buttons */
+.subcriteria-container .dropdown-btn {
+  width: 100%;
+  margin-left: 0;
+  background-color: #1976D2;
+  padding-left: 30px;
+}
+
+.subcriteria-container {
+  margin-left: 30px;
+  width: calc(100% - 30px);
+}
+
+.subcriteria-container .dropdown-btn:hover {
+  background-color: #1565C0;
+}
+
+/* Dropdown Arrows */
+.dropdown-btn:after {
+  content: '▼';
+  position: absolute;
+  right: 20px;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.dropdown-btn.active:after {
+  content: '▲';
+  transform: rotate(180deg);
+}
+
+/* Content Areas */
+.criteria-content {
+  display: none;
+  margin-top: 15px;
+  padding-left: 0;
+  border-left: none;
+  animation: fadeIn 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.criteria-content.active {
+  display: block;
+}
+
+/* Subcriteria Content */
+.subcriteria-area .criteria-content {
+  padding-left: 30px;
+}
+
+/* Add Resources Button - Fixed Styles */
+.add-resources-btn {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 10px 0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: block; /* Changed to block for proper spacing */
+  width: auto; /* Auto width based on content */
+}
+
+.add-resources-btn:hover {
+  background-color: #3d8b40;
+  transform: translateY(-1px);
+}
+
+/* Resources Options - Fixed Positioning */
+.resources-options {
+  display: none;
+  padding: 15px;
+  background-color: #f1f1f1;
+  border-radius: 4px;
+  margin: 10px 0 15px 0;
+  animation: fadeIn 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.resources-options.active {
+  display: block;
+}
+
+/* Resources Options Buttons */
+.resources-options button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.resources-options input[type="file"] {
+  display: block;
+  margin: 10px 0;
+}
+
+/* Text Input Areas */
+textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  margin: 15px 0;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: inherit;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border 0.3s ease;
+}
+
+textarea:focus {
+  border-color: #2196F3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 15px 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+table, th, td {
+  border: 1px solid #ddd;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table-container {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* Button Controls */
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+  transform: translateY(-1px);
+}
+
+.controls {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.controls button {
+  padding: 8px 15px;
+  background-color: #607D8B;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.controls button:hover {
+  background-color: #455A64;
+  transform: translateY(-1px);
+}
+
+/* Image Styles */
+img {
+  max-width: 250px;
+  margin: 15px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.02);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .subcriteria-container {
+    margin-left: 15px;
+    width: calc(100% - 15px);
+  }
+  
+  .subcriteria-area .criteria-content {
+    padding-left: 15px;
+  }
+  
+  .dropdown-btn {
+    white-space: normal;
+    padding: 12px 15px;
+    padding-right: 35px;
+  }
+  
+  .resources-options button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}
+
+/* Image Container Styles */
+.image-container {
+  display: inline-block;
+  position: relative;
+  margin: 15px;
+  vertical-align: top;
+}
+
+.remove-image-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+.remove-image-btn:hover {
+  background-color: #d32f2f;
+  transform: scale(1.1);
+}
+
+img {
+  max-width: 250px;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  display: block;
+}
