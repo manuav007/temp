@@ -183,7 +183,6 @@ function createTable(container) {
   deleteTableBtn.className = 'delete-btn';
   deleteTableBtn.textContent = 'Delete Table';
   deleteTableBtn.onclick = () => wrapper.remove();
-  wrapper.appendChild(deleteTableBtn);
 
   const tableId = `table-${tableCount++}`;
   const table = document.createElement('table');
@@ -222,10 +221,12 @@ function createTable(container) {
   delColBtn.textContent = 'Delete Column';
   delColBtn.onclick = () => deleteColumn(tableId);
 
+  // Add buttons in the desired order
   controls.appendChild(addRowBtn);
   controls.appendChild(addColBtn);
   controls.appendChild(delRowBtn);
   controls.appendChild(delColBtn);
+  controls.appendChild(deleteTableBtn); // Now this appears to the right of Delete Column
 
   wrapper.appendChild(controls);
 
