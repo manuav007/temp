@@ -72,6 +72,7 @@ h2 {
 .subcriteria-container {
   margin-left: 30px;
   width: calc(100% - 30px);
+  margin-bottom: 20px;
 }
 
 .subcriteria-container .dropdown-btn:hover {
@@ -110,6 +111,10 @@ h2 {
 /* Subcriteria Content */
 .subcriteria-area .criteria-content {
   padding-left: 30px;
+}
+
+.subcriteria-area {
+  margin-top: 15px; /* Adds space above subcriteria area */
 }
 
 /* Add Resources Button - Fixed Styles */
@@ -332,4 +337,17 @@ img {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
   display: block;
+}
+
+.image-name-input, .table-name-input {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.image-name-input:focus, .table-name-input:focus {
+  border-color: #2196F3;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
 }
