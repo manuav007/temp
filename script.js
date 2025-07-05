@@ -228,26 +228,41 @@ function createTable(container) {
   controls.appendChild(delColBtn);
 
   wrapper.appendChild(controls);
-  container.appendChild(wrapper);
+
+  // Insert before subcriteria if exists, else just append at end
+  const subArea = container.querySelector('.subcriteria-area');
+  if (subArea) {
+    container.insertBefore(wrapper, subArea);
+  } else {
+    container.appendChild(wrapper);
+  }
 }
 
 function addRow(tableId) {
   const table = document.getElementById(tableId);
   const row = table.insertRow();
+  const rowNumber = table.rows.length - 1; // Subtract 1 for header row
+  
   const colCount = table.rows[0].cells.length;
   for (let i = 0; i < colCount; i++) {
-    row.insertCell().contentEditable = true;
+    const cell = row.insertCell();
+    cell.contentEditable = true;
+    if (i === 0) {
+      cell.textContent = `Row ${rowNumber}`;
+    }
   }
 }
 
 function addColumn(tableId) {
   const table = document.getElementById(tableId);
+  const colName = prompt("Enter column name:", `Column ${table.rows[0].cells.length + 1}`);
+  
   for (let i = 0; i < table.rows.length; i++) {
     const cell = i === 0 ? document.createElement('th') : table.rows[i].insertCell();
     if (i === 0) {
       const input = document.createElement('input');
       input.type = 'text';
-      input.placeholder = 'Column Name';
+      input.value = colName || `Column ${table.rows[0].cells.length + 1}`;
       cell.appendChild(input);
       table.rows[i].appendChild(cell);
     } else {
@@ -258,22 +273,64 @@ function addColumn(tableId) {
 
 function deleteRow(tableId) {
   const table = document.getElementById(tableId);
-  if (table.rows.length > 2) {
-    table.deleteRow(table.rows.length - 1);
-  } else {
+  if (table.rows.length <= 2) {
     alert("Cannot delete all rows!");
+    return;
+  }
+
+  // Create a list of row options (skip header row)
+  const rowOptions = Array.from(table.rows).slice(1).map((row, index) => 
+    `Row ${index + 1}`
+  );
+
+  const selectedRow = prompt(`Which row to delete?\n${rowOptions.join('\n')}`);
+  if (!selectedRow) return;
+
+  const rowIndex = parseInt(selectedRow.match(/\d+/)[0]);
+  if (rowIndex >= 1 && rowIndex <= table.rows.length - 1) {
+    table.deleteRow(rowIndex); // Rows are 0-indexed but we showed 1-indexed to user
+  } else {
+    alert("Invalid row selection!");
   }
 }
 
 function deleteColumn(tableId) {
   const table = document.getElementById(tableId);
   const colCount = table.rows[0].cells.length;
-  if (colCount > 1) {
+  if (colCount <= 1) {
+    alert("Cannot delete all columns!");
+    return;
+  }
+
+  const colOptions = Array.from(table.rows[0].cells).map((cell, index) => {
+    const input = cell.querySelector('input');
+    const colName = input ? input.value || `Column ${index + 1}` : `Column ${index + 1}`;
+    return colName;
+  });
+
+  const selectedCol = prompt(`Which column to delete?\n${colOptions.join('\n')}`);
+  if (!selectedCol) return;
+  let colIndex = -1;
+  for (let i = 0; i < colOptions.length; i++) {
+    if (colOptions[i] === selectedCol) {
+      colIndex = i;
+      break;
+    }
+  }
+
+  if (colIndex === -1) {
+    const match = selectedCol.match(/column (\d+)/i);
+    if (match) {
+      colIndex = parseInt(match[1]) - 1;
+    }
+  }
+
+  if (colIndex >= 0 && colIndex < colCount) {
     for (let i = 0; i < table.rows.length; i++) {
-      table.rows[i].deleteCell(colCount - 1);
+      table.rows[i].deleteCell(colIndex);
     }
   } else {
-    alert("Cannot delete all columns!");
+    alert("Invalid column selection!");
   }
 }
 
@@ -285,16 +342,27 @@ function previewImages(event, container) {
       const imgContainer = document.createElement('div');
       imgContainer.className = 'image-container';
       
+      // Create image name input
+      const nameInput = document.createElement('input');
+      nameInput.type = 'text';
+      nameInput.placeholder = 'Enter image name';
+      nameInput.className = 'image-name-input';
+      nameInput.style.display = 'block';
+      nameInput.style.margin = '10px 0';
+      nameInput.style.padding = '8px';
+      nameInput.style.width = 'calc(100% - 16px)';
+      
       const img = document.createElement('img');
       img.src = e.target.result;
       
       const removeBtn = document.createElement('button');
       removeBtn.className = 'remove-image-btn';
-      removeBtn.textContent = 'Remove';
+      removeBtn.textContent = 'X';
       removeBtn.onclick = function() {
         imgContainer.remove();
       };
       
+      imgContainer.appendChild(nameInput);
       imgContainer.appendChild(img);
       imgContainer.appendChild(removeBtn);
       container.appendChild(imgContainer);
