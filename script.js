@@ -59,11 +59,11 @@ themeToggle.addEventListener('click', () => {
   if (currentTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'light');
     localStorage.setItem('theme', 'light');
-    themeToggle.textContent = '🌙 Dark Mode';
+    themeToggle.textContent = 'Dark Mode';
   } else {
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('theme', 'dark');
-    themeToggle.textContent = '🌞 Light Mode';
+    themeToggle.textContent = 'Light Mode';
   }
 });
 
