@@ -1,4 +1,3 @@
-// script.js
 const criteriaData = [
   {
     name: "Leadership",
@@ -39,6 +38,49 @@ const criteriaData = [
 ];
 
 let tableCount = 0;
+
+// Theme toggle functionality
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+
+// Check for saved theme preference or use system preference
+const currentTheme = localStorage.getItem('theme') || 
+                     (prefersDarkScheme.matches ? 'dark' : 'light');
+if (currentTheme === 'dark') {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = 'Light Mode';
+} else {
+  document.documentElement.setAttribute('data-theme', 'light');
+  themeToggle.textContent = 'Dark Mode';
+}
+
+themeToggle.addEventListener('click', () => {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  if (currentTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    localStorage.setItem('theme', 'light');
+    themeToggle.textContent = '🌙 Dark Mode';
+  } else {
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('theme', 'dark');
+    themeToggle.textContent = '🌞 Light Mode';
+  }
+});
+
+// Reset all functionality
+document.getElementById('reset-all').addEventListener('click', () => {
+  if (confirm('Are you sure you want to reset everything? This cannot be undone.')) {
+    localStorage.clear();
+    // Clear all textareas
+    document.querySelectorAll('textarea').forEach(ta => {
+      ta.value = '';
+    });
+    // Remove all tables and images
+    document.querySelectorAll('.table-container, .image-container').forEach(el => {
+      el.remove();
+    });
+  }
+});
 
 criteriaData.forEach((crit, i) => {
   const root = document.getElementById('criteria-root');
