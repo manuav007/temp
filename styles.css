@@ -1,89 +1,148 @@
-/* styles.css - Fixed Add Resources Button Version */
+/* Add these at the top of your CSS file */
+:root {
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --container-bg: #fff;
+  --container-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  --border-color: #e9ecef;
+  --btn-primary: #2196F3;
+  --btn-primary-hover: #0b7dda;
+  --btn-secondary: #607D8B;
+  --btn-secondary-hover: #455A64;
+  --btn-danger: #f44336;
+  --btn-danger-hover: #d32f2f;
+  --btn-success: #4CAF50;
+  --btn-success-hover: #3d8b40;
+}
+
+[data-theme="dark"] {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --container-bg: #1e1e1e;
+  --container-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  --border-color: #333;
+  --btn-primary: #1976D2;
+  --btn-primary-hover: #0d47a1;
+  --btn-secondary: #455A64;
+  --btn-secondary-hover: #263238;
+  --btn-danger: #d32f2f;
+  --btn-danger-hover: #b71c1c;
+  --btn-success: #388E3C;
+  --btn-success-hover: #1B5E20;
+}
+
+/* styles.css - Improved Version with Better Spacing, Fonts, and Consistency */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
-  padding: 20px;
-  background-color: #f5f5f5;
+  padding: 30px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 16px;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h2 {
-  color: #333;
-  margin-bottom: 30px;
+  color: var(--text-color);
+  margin-bottom: 40px;
   padding-left: 10px;
+  font-weight: 600;
 }
 
 /* Main Criteria Containers */
 .criteria-container {
-  border: 1px solid #ddd;
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 5px;
-  background-color: #f9f9f9;
+  border: none;
+  padding: 25px;
+  margin-bottom: 30px;
+  border-radius: 10px;
+  background-color: var(--container-bg);
   position: relative;
   margin-left: 0;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: var(--container-shadow);
   width: 100%;
   box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.criteria-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .criteria-header {
   display: flex;
   align-items: center;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   width: 100%;
 }
 
 /* Dropdown Buttons */
 .dropdown-btn {
-  padding: 12px 20px;
-  background-color: #2196F3;
+  padding: 14px 25px;
+  background-color: var(--btn-primary);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   width: 100%;
   text-align: left;
   position: relative;
   font-size: 16px;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   margin-right: 0;
-  padding-right: 35px;
+  padding-right: 40px;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   box-sizing: border-box;
 }
 
 .dropdown-btn:hover {
-  background-color: #0b7dda;
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  background-color: var(--btn-primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dropdown-btn:active {
+  transform: translateY(0);
 }
 
 /* Subcriteria Buttons */
 .subcriteria-container .dropdown-btn {
   width: 100%;
   margin-left: 0;
-  background-color: #1976D2;
-  padding-left: 30px;
+  background-color: var(--btn-primary);
+  padding-left: 35px;
 }
 
 .subcriteria-container {
-  margin-left: 30px;
-  width: calc(100% - 30px);
-  margin-bottom: 20px;
+  margin-left: 40px;
+  width: calc(100% - 40px);
+  margin-bottom: 25px;
+  margin-top: 20px;
+  background-color: var(--container-bg);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--container-shadow);
+}
+
+.subcriteria-container:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px rgba(0,0,0,0.1);
 }
 
 .subcriteria-container .dropdown-btn:hover {
-  background-color: #1565C0;
+  background-color: var(--btn-primary-hover);
 }
 
 /* Dropdown Arrows */
 .dropdown-btn:after {
   content: '▼';
   position: absolute;
-  right: 20px;
+  right: 25px;
   font-size: 14px;
   transition: transform 0.3s ease;
 }
@@ -96,7 +155,7 @@ h2 {
 /* Content Areas */
 .criteria-content {
   display: none;
-  margin-top: 15px;
+  margin-top: 20px;
   padding-left: 0;
   border-left: none;
   animation: fadeIn 0.3s ease;
@@ -110,43 +169,53 @@ h2 {
 
 /* Subcriteria Content */
 .subcriteria-area .criteria-content {
-  padding-left: 30px;
+  padding-left: 35px;
 }
 
 .subcriteria-area {
-  margin-top: 15px; /* Adds space above subcriteria area */
+  margin-top: 25px;
+  border-top: 1px solid var(--border-color);
+  padding-top: 20px;
 }
 
-/* Add Resources Button - Fixed Styles */
+/* Add Resources Button - Improved Styles */
 .add-resources-btn {
-  padding: 10px 15px;
-  background-color: #4CAF50;
+  padding: 12px 18px;
+  background-color: var(--btn-success);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  margin: 10px 0;
-  font-size: 14px;
+  margin: 15px 0;
+  font-size: 16px;
+  font-weight: 500;
   transition: all 0.3s ease;
-  display: block; /* Changed to block for proper spacing */
-  width: auto; /* Auto width based on content */
+  display: block;
+  width: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .add-resources-btn:hover {
-  background-color: #3d8b40;
-  transform: translateY(-1px);
+  background-color: var(--btn-success-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Resources Options - Fixed Positioning */
+.add-resources-btn:active {
+  transform: translateY(0);
+}
+
+/* Resources Options - Improved Positioning */
 .resources-options {
   display: none;
-  padding: 15px;
-  background-color: #f1f1f1;
-  border-radius: 4px;
-  margin: 10px 0 15px 0;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  margin: 15px 0 20px 0;
   animation: fadeIn 0.3s ease;
   width: 100%;
   box-sizing: border-box;
+  border: 1px solid var(--border-color);
 }
 
 .resources-options.active {
@@ -155,108 +224,135 @@ h2 {
 
 /* Resources Options Buttons */
 .resources-options button {
-  margin-right: 10px;
-  margin-bottom: 10px;
+  margin-right: 12px;
+  margin-bottom: 12px;
+  padding: 10px 16px;
+  font-size: 15px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.resources-options button:hover {
+  transform: translateY(-1px);
 }
 
 .resources-options input[type="file"] {
   display: block;
-  margin: 10px 0;
+  margin: 15px 0;
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed #ddd;
+  border-radius: 6px;
+  background-color: #fff;
 }
 
 /* Text Input Areas */
 textarea {
   width: 100%;
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
-  margin: 15px 0;
-  padding: 12px;
+  margin: 20px 0;
+  padding: 15px;
   box-sizing: border-box;
   font-family: inherit;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  transition: border 0.3s ease;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 15px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 textarea:focus {
-  border-color: #2196F3;
+  border-color: var(--btn-primary);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
+  box-shadow: 0 0 0 3px rgba(33,150,243,0.2);
 }
 
 /* Table Styles */
 table {
   width: 100%;
   border-collapse: collapse;
-  margin: 15px 0;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin: 25px 0;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
 }
 
 table, th, td {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
 }
 
 th, td {
-  padding: 12px;
+  padding: 14px;
   text-align: left;
 }
 
 th {
   background-color: #f2f2f2;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .table-container {
-  margin: 20px 0;
-  padding: 15px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  margin: 25px 0;
+  padding: 20px;
+  background-color: var(--container-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 }
 
 /* Button Controls */
 .delete-btn {
-  background-color: #f44336;
+  background-color: var(--btn-danger);
   color: white;
   border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
+  padding: 10px 16px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .delete-btn:hover {
-  background-color: #d32f2f;
-  transform: translateY(-1px);
+  background-color: var(--btn-danger-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.delete-btn:active {
+  transform: translateY(0);
 }
 
 .controls {
-  margin-top: 15px;
+  margin-top: 20px;
   display: flex;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
 }
 
 .controls button {
-  padding: 8px 15px;
-  background-color: #607D8B;
+  padding: 10px 16px;
+  background-color: var(--btn-secondary);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   transition: all 0.3s ease;
 }
 
 .controls button:hover {
-  background-color: #455A64;
-  transform: translateY(-1px);
+  background-color: var(--btn-secondary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.controls button:active {
+  transform: translateY(0);
 }
 
 img:hover {
-  transform: scale(1.02);
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
 /* Animations */
@@ -267,25 +363,33 @@ img:hover {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
   .subcriteria-container {
-    margin-left: 15px;
-    width: calc(100% - 15px);
+    margin-left: 20px;
+    width: calc(100% - 20px);
   }
   
   .subcriteria-area .criteria-content {
-    padding-left: 15px;
+    padding-left: 20px;
   }
   
   .dropdown-btn {
     white-space: normal;
-    padding: 12px 15px;
-    padding-right: 35px;
+    padding: 14px 20px;
+    padding-right: 40px;
   }
   
   .resources-options button {
     width: 100%;
     margin-right: 0;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .criteria-container, .subcriteria-container {
+    padding: 20px;
   }
 }
 
@@ -293,52 +397,116 @@ img:hover {
 .image-container {
   display: inline-block;
   position: relative;
-  margin: 15px;
+  margin: 20px;
   vertical-align: top;
+  background: var(--container-bg);
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.image-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.12);
 }
 
 .remove-image-btn {
   position: absolute;
   top: -10px;
   right: -10px;
-  background-color: #f44336;
+  background-color: var(--btn-danger);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  font-size: 12px;
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
   cursor: pointer;
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .remove-image-btn:hover {
-  background-color: #d32f2f;
+  background-color: var(--btn-danger-hover);
   transform: scale(1.1);
 }
 
 img {
-  max-width: 250px;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
+  max-width: 280px;
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: block;
 }
 
 .image-name-input, .table-name-input {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  width: 100%;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
 }
 
 .image-name-input:focus, .table-name-input:focus {
-  border-color: #2196F3;
+  border-color: var(--btn-primary);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(33,150,243,0.2);
+  box-shadow: 0 0 0 3px rgba(33,150,243,0.2);
+}
+
+/* Consistent hover states for all buttons */
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+/* Add new styles for header controls */
+.header-controls {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.header-controls button {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+#theme-toggle {
+  background-color: var(--btn-secondary);
+  color: white;
+}
+
+#theme-toggle:hover {
+  background-color: var(--btn-secondary-hover);
+}
+
+#reset-all {
+  background-color: var(--btn-danger);
+  color: white;
+}
+
+#reset-all:hover {
+  background-color: var(--btn-danger-hover);
 }
