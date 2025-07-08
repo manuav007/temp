@@ -1,3 +1,7 @@
+const chartScript = document.createElement('script');
+chartScript.src = 'https://cdn.jsdelivr.net/npm/chart.js';
+document.head.appendChild(chartScript);
+
 const criteriaData = [
   {
     name: "Leadership",
@@ -39,11 +43,9 @@ const criteriaData = [
 
 let tableCount = 0;
 
-// Theme toggle functionality
 const themeToggle = document.getElementById('theme-toggle');
 const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
 
-// Check for saved theme preference or use system preference
 const currentTheme = localStorage.getItem('theme') || 
                      (prefersDarkScheme.matches ? 'dark' : 'light');
 if (currentTheme === 'dark') {
@@ -67,29 +69,112 @@ themeToggle.addEventListener('click', () => {
   }
 });
 
-// Reset all functionality
 document.getElementById('reset-all').addEventListener('click', () => {
   if (confirm('Are you sure you want to reset everything? This cannot be undone.')) {
     localStorage.clear();
-    // Clear all textareas
     document.querySelectorAll('textarea').forEach(ta => {
       ta.value = '';
     });
-    // Remove all tables and images
     document.querySelectorAll('.table-container, .image-container').forEach(el => {
       el.remove();
     });
   }
 });
 
+// Save to Database functionality
+document.getElementById('save-to-db').addEventListener('click', () => {
+  // Collect all text content
+  const allTextareas = document.querySelectorAll('textarea');
+  const textData = [];
+  
+  allTextareas.forEach((ta, index) => {
+    const parentElement = ta.closest('.criteria-content, .subcriteria-container');
+    const header = parentElement.querySelector('.dropdown-btn')?.textContent || 'Untitled';
+    
+    textData.push({
+      id: index,
+      header: header,
+      text: ta.value
+    });
+  });
+
+  // Collect all tables
+  const tables = [];
+  document.querySelectorAll('.table-container').forEach((tableContainer, index) => {
+    const table = tableContainer.querySelector('table');
+    const tableData = {
+      id: `table-${index}`,
+      headers: [],
+      rows: []
+    };
+
+    // Get headers
+    const headerRow = table.rows[0];
+    for (let i = 0; i < headerRow.cells.length; i++) {
+      const input = headerRow.cells[i].querySelector('input');
+      tableData.headers.push(input ? input.value : `Column ${i + 1}`);
+    }
+
+    // Get rows
+    for (let i = 1; i < table.rows.length; i++) {
+      const row = table.rows[i];
+      const rowData = [];
+      
+      for (let j = 0; j < row.cells.length; j++) {
+        rowData.push(row.cells[j].textContent);
+      }
+      
+      tableData.rows.push(rowData);
+    }
+
+    tables.push(tableData);
+  });
+
+  // Collect all images (as base64 strings)
+  const images = [];
+  document.querySelectorAll('.image-container').forEach((imgContainer, index) => {
+    const img = imgContainer.querySelector('img');
+    const nameInput = imgContainer.querySelector('.image-name-input');
+    
+    images.push({
+      id: `image-${index}`,
+      name: nameInput ? nameInput.value : `Image ${index + 1}`,
+      data: img.src // This is the base64 encoded image
+    });
+  });
+
+  // Prepare the complete data object
+  const dataToSend = {
+    textData: textData,
+    tables: tables,
+    images: images,
+    timestamp: new Date().toISOString()
+  };
+
+  // Send to server
+  fetch('save_data.php', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(dataToSend)
+  })
+  .then(res => res.text())
+  .then(response => {
+    alert("Data saved successfully!\nServer Response: " + response);
+  })
+  .catch(err => {
+    console.error("Error:", err);
+    alert("Failed to save data. Please check console for details.");
+  });
+});
+
 criteriaData.forEach((crit, i) => {
   const root = document.getElementById('criteria-root');
 
-  // Create main criteria container
   const container = document.createElement('div');
   container.className = 'criteria-container';
 
-  // Create criteria header with dropdown button
   const header = document.createElement('div');
   header.className = 'criteria-header';
 
@@ -105,16 +190,13 @@ criteriaData.forEach((crit, i) => {
   header.appendChild(dropdownBtn);
   container.appendChild(header);
 
-  // Create criteria content (initially hidden)
   const content = document.createElement('div');
   content.className = 'criteria-content';
 
-  // Add textarea for criteria
   const paragraphField = document.createElement('textarea');
   paragraphField.placeholder = `Write paragraph for Criteria ${i + 1}...`;
   content.appendChild(paragraphField);
 
-  // Add "Add Resources" button
   const addResourcesBtn = document.createElement('button');
   addResourcesBtn.className = 'add-resources-btn';
   addResourcesBtn.textContent = 'Add Resources';
@@ -124,17 +206,14 @@ criteriaData.forEach((crit, i) => {
   };
   content.appendChild(addResourcesBtn);
 
-  // Add resources options (initially hidden)
   const resourcesOptions = document.createElement('div');
   resourcesOptions.className = 'resources-options';
 
-  // Add "Create Table" button
   const tableBtn = document.createElement('button');
   tableBtn.textContent = 'Create Table';
   tableBtn.onclick = () => createTable(content);
   resourcesOptions.appendChild(tableBtn);
 
-  // Add file input for images
   const fileInput = document.createElement('input');
   fileInput.type = 'file';
   fileInput.accept = 'image/*';
@@ -145,17 +224,14 @@ criteriaData.forEach((crit, i) => {
   content.appendChild(resourcesOptions);
   container.appendChild(content);
 
-  // Create subcriteria area (initially hidden with the criteria content)
   const subArea = document.createElement('div');
   subArea.className = 'subcriteria-area';
   content.appendChild(subArea);
 
-  // Add subcriteria if they exist
   crit.sub.forEach((subname, j) => {
     const subContainer = document.createElement('div');
     subContainer.className = 'subcriteria-container';
 
-    // Subcriteria header with dropdown button
     const subHeader = document.createElement('div');
     subHeader.className = 'subcriteria-header';
 
@@ -171,16 +247,13 @@ criteriaData.forEach((crit, i) => {
     subHeader.appendChild(subDropdownBtn);
     subContainer.appendChild(subHeader);
 
-    // Subcriteria content (initially hidden)
     const subContent = document.createElement('div');
     subContent.className = 'criteria-content';
 
-    // Add textarea for subcriteria
     const subParagraphField = document.createElement('textarea');
     subParagraphField.placeholder = `Write paragraph for ${i + 1}.${j + 1}...`;
     subContent.appendChild(subParagraphField);
 
-    // Add "Add Resources" button for subcriteria
     const subAddResourcesBtn = document.createElement('button');
     subAddResourcesBtn.className = 'add-resources-btn';
     subAddResourcesBtn.textContent = 'Add Resources';
@@ -190,17 +263,14 @@ criteriaData.forEach((crit, i) => {
     };
     subContent.appendChild(subAddResourcesBtn);
 
-    // Add resources options for subcriteria (initially hidden)
     const subResourcesOptions = document.createElement('div');
     subResourcesOptions.className = 'resources-options';
 
-    // Add "Create Table" button for subcriteria
     const subTableBtn = document.createElement('button');
     subTableBtn.textContent = 'Create Table';
     subTableBtn.onclick = () => createTable(subContent);
     subResourcesOptions.appendChild(subTableBtn);
 
-    // Add file input for subcriteria images
     const subFileInput = document.createElement('input');
     subFileInput.type = 'file';
     subFileInput.accept = 'image/*';
@@ -216,7 +286,6 @@ criteriaData.forEach((crit, i) => {
   root.appendChild(container);
 });
 
-// Rest of the functions remain the same
 function createTable(container) {
   const wrapper = document.createElement('div');
   wrapper.className = 'table-container';
@@ -263,16 +332,46 @@ function createTable(container) {
   delColBtn.textContent = 'Delete Column';
   delColBtn.onclick = () => deleteColumn(tableId);
 
-  // Add buttons in the desired order
+  const generateGraphBtn = document.createElement('button');
+  generateGraphBtn.className = 'graph-btn';
+  generateGraphBtn.textContent = 'Generate Graph';
+  generateGraphBtn.onclick = function() {
+    const options = this.nextElementSibling;
+    options.classList.toggle('active');
+  };
+
+  const graphOptions = document.createElement('div');
+  graphOptions.className = 'graph-options';
+
+  const barChartBtn = document.createElement('button');
+  barChartBtn.className = 'graph-btn';
+  barChartBtn.textContent = 'Bar Chart';
+  barChartBtn.onclick = () => generateChart(tableId, 'bar');
+
+  const pieChartBtn = document.createElement('button');
+  pieChartBtn.className = 'graph-btn';
+  pieChartBtn.textContent = 'Pie Chart';
+  pieChartBtn.onclick = () => generateChart(tableId, 'pie');
+
+  const lineChartBtn = document.createElement('button');
+  lineChartBtn.className = 'graph-btn';
+  lineChartBtn.textContent = 'Line Chart';
+  lineChartBtn.onclick = () => generateChart(tableId, 'line');
+
+  graphOptions.appendChild(barChartBtn);
+  graphOptions.appendChild(pieChartBtn);
+  graphOptions.appendChild(lineChartBtn);
+
   controls.appendChild(addRowBtn);
   controls.appendChild(addColBtn);
   controls.appendChild(delRowBtn);
   controls.appendChild(delColBtn);
-  controls.appendChild(deleteTableBtn); // Now this appears to the right of Delete Column
+  controls.appendChild(deleteTableBtn);
+  controls.appendChild(generateGraphBtn);
+  controls.appendChild(graphOptions);
 
   wrapper.appendChild(controls);
 
-  // Insert before subcriteria if exists, else just append at end
   const subArea = container.querySelector('.subcriteria-area');
   if (subArea) {
     container.insertBefore(wrapper, subArea);
@@ -284,14 +383,15 @@ function createTable(container) {
 function addRow(tableId) {
   const table = document.getElementById(tableId);
   const row = table.insertRow();
-  const rowNumber = table.rows.length - 1; // Subtract 1 for header row
+  const rowNumber = table.rows.length - 1;
   
   const colCount = table.rows[0].cells.length;
   for (let i = 0; i < colCount; i++) {
     const cell = row.insertCell();
     cell.contentEditable = true;
     if (i === 0) {
-      cell.textContent = `Row ${rowNumber}`;
+      cell.textContent = '';
+      cell.setAttribute('placeholder', `Row ${rowNumber}`);
     }
   }
 }
@@ -321,17 +421,17 @@ function deleteRow(tableId) {
     return;
   }
 
-  // Create a list of row options (skip header row)
-  const rowOptions = Array.from(table.rows).slice(1).map((row, index) => 
-    `Row ${index + 1}`
-  );
+  const rowOptions = Array.from(table.rows).slice(1).map((row, index) => {
+    const firstCellText = row.cells[0].textContent.trim();
+    return firstCellText ? `${index + 1}: ${firstCellText}` : `Row ${index + 1}`;
+  });
 
   const selectedRow = prompt(`Which row to delete?\n${rowOptions.join('\n')}`);
   if (!selectedRow) return;
 
   const rowIndex = parseInt(selectedRow.match(/\d+/)[0]);
   if (rowIndex >= 1 && rowIndex <= table.rows.length - 1) {
-    table.deleteRow(rowIndex); // Rows are 0-indexed but we showed 1-indexed to user
+    table.deleteRow(rowIndex); 
   } else {
     alert("Invalid row selection!");
   }
@@ -385,15 +485,10 @@ function previewImages(event, container) {
       const imgContainer = document.createElement('div');
       imgContainer.className = 'image-container';
       
-      // Create image name input
       const nameInput = document.createElement('input');
       nameInput.type = 'text';
       nameInput.placeholder = 'Enter image name';
       nameInput.className = 'image-name-input';
-      nameInput.style.display = 'block';
-      nameInput.style.margin = '10px 0';
-      nameInput.style.padding = '8px';
-      nameInput.style.width = 'calc(100% - 16px)';
       
       const img = document.createElement('img');
       img.src = e.target.result;
@@ -412,4 +507,153 @@ function previewImages(event, container) {
     };
     reader.readAsDataURL(file);
   });
+}
+
+function generateChart(tableId, chartType) {
+  const table = document.getElementById(tableId);
+  if (!table) return;
+
+  const existingChart = document.getElementById(`${tableId}-chart`);
+  if (existingChart) existingChart.remove();
+
+  const headers = [];
+  const data = [];
+  const labels = [];
+
+  const headerRow = table.rows[0];
+  for (let i = 1; i < headerRow.cells.length; i++) {
+    const input = headerRow.cells[i].querySelector('input');
+    headers.push(input ? input.value : `Column ${i}`);
+  }
+
+  for (let i = 1; i < table.rows.length; i++) {
+    const row = table.rows[i];
+    const rowData = [];
+
+    const labelText = row.cells[0].textContent.trim() || `Row ${i}`;
+    labels.push(labelText);
+
+    for (let j = 1; j < row.cells.length; j++) {
+      const value = parseFloat(row.cells[j].textContent) || 0;
+      rowData.push(value);
+    }
+
+    data.push(rowData);
+  }
+
+  if (data.length === 0 || headers.length === 0) {
+    alert('Please add data to the table first!');
+    return;
+  }
+
+  const chartContainer = document.createElement('div');
+  chartContainer.className = 'chart-container';
+  chartContainer.id = `${tableId}-chart`;
+
+  const removeChartBtn = document.createElement('button');
+  removeChartBtn.className = 'remove-chart-btn';
+  removeChartBtn.textContent = '×';
+  removeChartBtn.onclick = () => chartContainer.remove();
+
+  const canvas = document.createElement('canvas');
+  chartContainer.appendChild(canvas);
+  chartContainer.appendChild(removeChartBtn);
+  table.parentNode.insertBefore(chartContainer, table.nextSibling);
+
+  const pastelColors = [
+    '#f8b195', '#f67280', '#c06c84', '#6c5b7b', '#355c7d',
+    '#99b898', '#feceab', '#ff847c', '#e84a5f', '#2a363b'
+  ];
+
+  const chartOptions = {
+    responsive: true,
+    animation: {
+      duration: 1000,
+      easing: 'easeOutQuart'
+    },
+    layout: {
+      padding: 20
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+          font: {
+            size: 14,
+            family: "'Segoe UI', sans-serif"
+          }
+        }
+      },
+      tooltip: {
+        backgroundColor: '#222',
+        titleColor: '#fff',
+        bodyColor: '#ddd',
+        borderColor: '#666',
+        borderWidth: 1,
+        padding: 12,
+        cornerRadius: 8
+      },
+      title: {
+        display: true,
+        text: `${chartType.charAt(0).toUpperCase() + chartType.slice(1)} Chart`,
+        color: getComputedStyle(document.documentElement).getPropertyValue('--text-color'),
+        font: {
+          size: 18,
+          family: "'Segoe UI', sans-serif"
+        },
+        padding: {
+          top: 10,
+          bottom: 20
+        }
+      }
+    }
+  };
+
+  if (chartType === 'pie') {
+    new Chart(canvas, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data.map(row => row[0]),
+          backgroundColor: pastelColors.slice(0, labels.length),
+          borderColor: '#fff',
+          borderWidth: 2,
+          hoverOffset: 10
+        }]
+      },
+      options: chartOptions
+    });
+  } else {
+    const datasets = data.map((d, idx) => ({
+      label: labels[idx],
+      data: d,
+      backgroundColor: pastelColors[idx % pastelColors.length] + 'cc',
+      borderColor: pastelColors[idx % pastelColors.length],
+      borderWidth: 2,
+      tension: 0.4, // for line smoothing
+      fill: chartType === 'line'
+    }));
+
+    new Chart(canvas, {
+      type: chartType,
+      data: {
+        labels: headers,
+        datasets: datasets
+      },
+      options: chartOptions
+    });
+  }
+}
+
+function getRandomColors(count) {
+  const colors = [];
+  for (let i = 0; i < count; i++) {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    colors.push(`rgba(${r}, ${g}, ${b}, 0.7)`);
+  }
+  return colors;
 }
